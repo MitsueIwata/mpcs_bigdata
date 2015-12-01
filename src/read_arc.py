@@ -6,33 +6,41 @@ import time
  
 #data = urllib.urlopen('http://bitly.measuredvoice.com/bitly_archive/?C=M;O=D').read()    
 #print data
+years = [2013]#, 2012, 2011]
 
-data = urllib.urlopen('http://1usagov.measuredvoice.com/2013/').read()
-#print data
+for y in years:
+
+	fn = '/Users/mitsueiwata/CAPP/bigdata/mpcs_bigdata/data/'+str(y)
+	print fn
+
+	data = urllib.urlopen('http://1usagov.measuredvoice.com/'+str(y)).read()
+	#print data
+
+	#datafiles name pattern - usagov_bitly_data2011-07-29-1311919454
+	p = re.compile('usagov_bitly_data\d{4}-\d{2}-\d{2}-\d{10}')
+	#print p.findall('<tr><td valign="top"><img src="/icons/unknown.gif" alt="[   ]"></td><td><a href="usagov_bitly_data2011-07-29-1311919454">usagov_bitly_data2011-07-29-1311919454</a></td><td align="right">29-Jul-2011 07:04  </td><td')
+
+	m=p.findall(data)
+
+	#print m
+
+	#for i in range(len(m)):
+	#	if (i%2==0):
+	#		print m[i]
+			
 
 
-#datafiles name pattern - usagov_bitly_data2011-07-29-1311919454
-p = re.compile('usagov_bitly_data\d{4}-\d{2}-\d{2}-\d{10}')
-#print p.findall('<tr><td valign="top"><img src="/icons/unknown.gif" alt="[   ]"></td><td><a href="usagov_bitly_data2011-07-29-1311919454">usagov_bitly_data2011-07-29-1311919454</a></td><td align="right">29-Jul-2011 07:04  </td><td')
+	#time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(epoch))
 
-m=p.findall(data)
+	#print len(m)
 
-#print m
+	for i in range(len(m)):
+		if (i%2==0):
+			print "downloading ",  m[i]
+			urllib.urlretrieve ("http://1usagov.measuredvoice.com/bitly_archive/"+m[i]+".gz", fn +'/'+m[i]+".gz")
 
-for i in range(len(m)):
-	if (i%2==0):
-		print m[i]
-		
-#time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(epoch))
-
-print len(m)
-'''
-for i in range(len(m)):
-	if (i%2==0):
-		print "downloading ",  m[i]
-		clicks = urllib.urlopen('http://bitly.measuredvoice.com/bitly_archive/'+m[i]).read()
-		file = open(m[i], "w")
-		file.write(clicks)
-		file.close()
-		print "done"
-'''
+			#clicks = urllib.urlopen('http://1usagov.measuredvoice.com/'+y+'/'+m[i]).read()
+			#file = open(fn+m[i], "w")
+			#file.write(clicks)
+			#file.close()
+			print "done"
